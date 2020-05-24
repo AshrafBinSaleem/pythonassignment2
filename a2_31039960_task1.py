@@ -27,24 +27,52 @@
 class Person:
 
     def __init__(self, first_name, last_name):
-        pass # placeholder only. To be implemented in task 1.
+        self.first_name = first_name
+        self.last_name = last_name
+        self.friends_list = []
+        #pass # placeholder only. To be implemented in task 1.
 
     def add_friend(self, friend_person):
-        pass # placeholder only. To be implemented in task 1.
+        self.friends_list.append(friend_person)
+        #pass # placeholder only. To be implemented in task 1.
 
     def get_name(self):
-        pass # placeholder only. To be implemented in task 1.
+        return self.first_name + " " + self.last_name
+        #pass # placeholder only. To be implemented in task 1.
 
     def get_friends(self):
-        pass # placeholder only. To be implemented in task 1.
+        return self.friends_list
+        #pass # placeholder only. To be implemented in task 1.
 
 
 def load_people():
-    pass # placeholder only. To be implemented in task 1.
+    read_file = open("a2_sample_set.txt", "r")
+    person_list = []
+    for line in read_file:
+        #spliting each line
+        line_splited = line.split(": ")
 
+        #seperating first name and last name and seperating person from friend
+        person_first_name = line_splited[0].split(" ")[0]
+        person_last_name = line_splited[0].split(" ")[1]
+        person = Person(person_first_name, person_last_name)
+
+        #adding friends
+        for friend_name in line_splited[1].split(", "):
+            friend_first_name = friend_name.split(" ")[0]
+            friend_last_name =  friend_name.split(" ")[1]
+            friend_person = Person(friend_first_name, friend_last_name)
+            person.add_friend(friend_person)
+
+        person_list.append(person)
+        print(person.get_friends())
+    #pass # placeholder only. To be implemented in task 1.
+    print(person_list)
+    return person_list
 
 if __name__ == '__main__':
-    pass # placeholder only. You may add your own testing code within this
+    load_people()
+    #pass # placeholder only. You may add your own testing code within this
          # main block to check if the code is working the way you expect.
 
 
