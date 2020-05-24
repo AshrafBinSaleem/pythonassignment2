@@ -24,7 +24,7 @@
 #   has omitted program comments, which are your responsibility to add. Any
 #   other 'placeholder' comments should be removed from your final submission.
 
-from a2_xxxxxxxx_task1 import *
+from a2_31039960_task1 import *
 
 class Patient(Person):
     def __init__(self, first_name, last_name, health):
