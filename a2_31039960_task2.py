@@ -26,21 +26,34 @@
 
 from a2_31039960_task1 import *
 
+
 class Patient(Person):
     def __init__(self, first_name, last_name, health):
-        pass # placeholder only. To be implemented in task 2.
+        Person.__init__(self, first_name, last_name)
+        self.health = health
 
     def get_health(self):
-        pass # placeholder only. To be implemented in task 2.
+        return self.health
 
     def set_health(self, new_health):
-        pass # placeholder only. To be implemented in task 2.
+        self.health = new_health
 
     def is_contagious(self):
-        pass # placeholder only. To be implemented in task 2.
+        if 0 < self.health < 49:
+            return True
+        else:
+            return False
 
     def infect(self, viral_load):
-        pass # placeholder only. To be implemented in task 2.
+        if self.health <= 29:
+            self.health = self.health - (0.1 * viral_load)
+
+        elif 29 < self.health < 50:
+            self.health = self.health - (1.0 * viral_load)
+
+        elif 50 >= self.health:
+            self.health = self.health - (2.0 * viral_load)
+
 
     def sleep(self):
         pass # placeholder only. To be implemented in task 2.
