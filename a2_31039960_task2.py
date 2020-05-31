@@ -25,6 +25,8 @@
 #   other 'placeholder' comments should be removed from your final submission.
 
 from a2_31039960_task1 import *
+import random
+patient_dict = {}
 
 
 class Patient(Person):
@@ -39,7 +41,7 @@ class Patient(Person):
         self.health = new_health
 
     def is_contagious(self):
-        if 0 < self.health < 49:
+        if 0 < self.health <= 49:
             return True
         else:
             return False
@@ -51,19 +53,63 @@ class Patient(Person):
         elif 29 < self.health < 50:
             self.health = self.health - (1.0 * viral_load)
 
-        elif 50 >= self.health:
+        elif self.health >= 50:
             self.health = self.health - (2.0 * viral_load)
 
+    def get_viral_load(self):
+        return 5.0 + (pow((self.health - 25.0), 2)/62.0)
 
     def sleep(self):
-        pass # placeholder only. To be implemented in task 2.
+        self.health += 5
+        if self.health >= 100:
+            self.health = 100
 
 
 def run_simulation(days, meeting_probability, patient_zero_health):
-    pass # placeholder only. To be implemented in task 2.
+    patients = load_patients(75)
+    patients[0].set_health(patient_zero_health)
+    contagious_count_list = []
+    for day in range(days):
+        count = 0
+        for patient in patients:
+            for friend in patient.get_friends():
+                if random.random() < meeting_probability:
+                    if patient.is_contagious():
+                        friend.infect(patient.get_viral_load())
+                    if friend.is_contagious():
+                        patient.infect(friend.get_viral_load())
+
+        for patient in patients:
+            if patient.is_contagious():
+                count += 1
+        contagious_count_list.append(count)
+    return contagious_count_list
+
+
+def dict_loader(name, health):
+    if name not in patient_dict:
+        person_first_name = name.split(" ")[0]
+        person_last_name = name.split(" ")[1]
+        patient_dict[name] = Patient(person_first_name, person_last_name, health)
+    return patient_dict[name]
+
 
 def load_patients(initial_health):
-    pass # placeholder only. To be implemented in task 2.
+    read_file = open("a2_sample_set.txt", "r")
+    patient_list = []
+    for line in read_file:
+        # splitting each line
+        line_splited = line.split(": ")
+
+        patient = dict_loader(line_splited[0], initial_health)
+
+        # adding friends
+        for friend_name in line_splited[1].split(", "):
+            friend_person = dict_loader(friend_name, initial_health)
+            patient.add_friend(friend_person)
+
+        patient_list.append(patient)
+    return patient_list
 
 
 if __name__ == '__main__':
