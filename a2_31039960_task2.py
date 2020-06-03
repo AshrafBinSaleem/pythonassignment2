@@ -26,6 +26,10 @@
 
 from a2_31039960_task1 import *
 import random
+
+# patient_dict -> map the name with Patient object
+# { str : Patient }
+# key = patient_name (str) & value =  Patient_object
 patient_dict = {}
 
 
@@ -41,20 +45,22 @@ class Patient(Person):
         self.health = new_health
 
     def is_contagious(self):
-        if 0 < self.health <= 49:
+        if 0 <= self.health <= 49:
             return True
         else:
             return False
 
     def infect(self, viral_load):
         if self.health <= 29:
-            self.health = self.health - (0.1 * viral_load)
-
+            self.health = round(self.health - (0.1 * viral_load))
         elif 29 < self.health < 50:
-            self.health = self.health - (1.0 * viral_load)
+            self.health = round(self.health - (1.0 * viral_load))
 
         elif self.health >= 50:
-            self.health = self.health - (2.0 * viral_load)
+            self.health = round(self.health - (2.0 * viral_load))
+
+        if self.health < 0:
+            self.health = 0
 
     def get_viral_load(self):
         return 5.0 + (pow((self.health - 25.0), 2)/62.0)
@@ -64,25 +70,31 @@ class Patient(Person):
         if self.health >= 100:
             self.health = 100
 
+    def __str__(self):
+        return self.first_name + " " + self.last_name + " : " + str(self.get_health())
+
 
 def run_simulation(days, meeting_probability, patient_zero_health):
     patients = load_patients(75)
     patients[0].set_health(patient_zero_health)
     contagious_count_list = []
     for day in range(days):
+        # count is a variable that stores the number of contagious people
         count = 0
         for patient in patients:
             for friend in patient.get_friends():
-                if random.random() < meeting_probability:
+
+                if random.random() <= meeting_probability:
                     if patient.is_contagious():
                         friend.infect(patient.get_viral_load())
                     if friend.is_contagious():
                         patient.infect(friend.get_viral_load())
-
         for patient in patients:
             if patient.is_contagious():
                 count += 1
+            patient.sleep()
         contagious_count_list.append(count)
+
     return contagious_count_list
 
 
@@ -95,21 +107,24 @@ def dict_loader(name, health):
 
 
 def load_patients(initial_health):
-    read_file = open("a2_sample_set.txt", "r")
-    patient_list = []
-    for line in read_file:
-        # splitting each line
-        line_splited = line.split(": ")
+    try:
+        read_file = open("a2_sample_set.txt", "r")
+        patient_list = []
+        for line in read_file:
+            # splitting each line
+            line_splited = line.split(": ")
 
-        patient = dict_loader(line_splited[0], initial_health)
+            patient = dict_loader(line_splited[0], initial_health)
 
-        # adding friends
-        for friend_name in line_splited[1].split(", "):
-            friend_person = dict_loader(friend_name, initial_health)
-            patient.add_friend(friend_person)
+            # adding friends
+            for friend_name in line_splited[1].split(", "):
+                friend_person = dict_loader(friend_name.rstrip(), initial_health)
+                patient.add_friend(friend_person)
 
-        patient_list.append(patient)
-    return patient_list
+            patient_list.append(patient)
+        return patient_list
+    except IOError:
+        print("File could not be open !, please check if file named a2_sample_set.txt exist or close file !")
 
 
 if __name__ == '__main__':
@@ -117,8 +132,8 @@ if __name__ == '__main__':
     # to check if the code is working the way you expect.
 
     #This is a sample test case. Write your own testing code here.
-    test_result = run_simulation(15, 0.8, 49)
-    print(test_result)
+    #test_result = run_simulation(15, 0.8, 49)
+    #print(test_result)
     # Sample output for the above test case (15 days of case numbers):
     # [8, 16, 35, 61, 93, 133, 153, 171, 179, 190, 196, 198, 199, 200, 200]
     #
@@ -129,6 +144,7 @@ if __name__ == '__main__':
     # Another sample test case (high meeting probability means this will
     # spread to everyone very quickly; 40 days means will get 40 entries.)
     test_result = run_simulation(40, 1, 1)
+    print(test_result)
     #sample output:
     # [19, 82, 146, 181, 196, 199, 200, 200, 200, 200, 200, 200, 200, 200, 
     # 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200,

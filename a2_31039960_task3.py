@@ -15,16 +15,23 @@
 #   other 'placeholder' comments should be removed from your final submission.
 
 
-from a2_xxxxxxxx_task2 import *
+from a2_31039960_task2 import *
+# as a re-naming namespace
+import pandas as pd
+
 # import statement to make use of functions/classes from earlier task(s).
 # (change the xxxxxxxx to match the actual filename.)
 
 
 def visual_curve(days, meeting_probability, patient_zero_health):
-    pass # Placeholder. This function to be implemented in task 3
+    result = run_simulation(days, meeting_probability, patient_zero_health)
+    df = pd.DataFrame(result)
+    graph = df.plot.line(legend=False)
+    graph.set_ylabel('Count')
+    graph.set_xlabel('Days')
+    graph.figure.savefig('task3.png')
+
 
 if __name__ == '__main__':
-    pass # Placeholder for main block code, to be implemented in task 3
-
-
+    visual_curve(60, 0.25, 49)
 # do not add code here (outside the main block).

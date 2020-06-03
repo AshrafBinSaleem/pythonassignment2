@@ -23,54 +23,82 @@
 #   template file and add your own program comments instead. This template file
 #   has omitted program comments, which are your responsibility to add. Any
 #   other 'placeholder' comments should be removed from your final submission.
-
 # creating a dictionary to store unique person name and store their person object.
+# key = person_name (str) & value =  Person_object
 person_dict = {}
 
 
 class Person:
 
+    # Constructor
+    # first_name: str -> the first name of the data
+    # last_name: str -> the last name of the data
     def __init__(self, first_name, last_name):
         self.first_name = first_name
         self.last_name = last_name
         self.friends_list = []
 
+    # Method that add friends to the objects friend_list[]
+    # friend_person: Person -> person object
     def add_friend(self, friend_person):
+        # adding Person object to friends_list[]
         self.friends_list.append(friend_person)
 
+    # Method to return person name
+    # return will return first_name + last_name
     def get_name(self):
         return self.first_name + " " + self.last_name
 
+    # Method to return person friend_list[]
+    # return will return friend_list[]
     def get_friends(self):
         return self.friends_list
 
 
 # creating a dictionary to store name and person object as friend
+# name: str -> string read from text file
 def dict_loader(name):
+    # validating if dictionary key exist or not, if not create new Person
     if name not in person_dict:
+        # assigning first part of string eg : "Gill"
         person_first_name = name.split(" ")[0]
+        # assigning second part of string eg : "Bates"
         person_last_name = name.split(" ")[1]
+        # creating dictionary input with string name as key and Person as value
         person_dict[name] = Person(person_first_name, person_last_name)
+    # returning the dictionary key/value
     return person_dict[name]
 
-
+# Method to load (initialize) people
 def load_people():
-    read_file = open("a2_sample_set.txt", "r")
-    person_list = []
-    for line in read_file:
-        # splitting each line
-        line_splited = line.split(": ")
+    # Validating if file can be opened
+    try:
+        # reading text file
+        read_file = open("a2_sample_set.txt", "r")
+        # creating a list to store person objects
+        person_list = []
+        # looping through each line in the text file
+        for line in read_file:
+            # splitting each line into half's
+            line_splited = line.split(": ")
+            # assigning the dictionary value based on the input of the first half of the line (aka the person name).
+            person = dict_loader(line_splited[0])
 
-        person = dict_loader(line_splited[0])
-
-        # adding friends
-        for friend_name in line_splited[1].split(", "):
-            friend_person = dict_loader(friend_name)
-            person.add_friend(friend_person)
-
-        person_list.append(person)
-    return person_list
+            # adding friends
+            for friend_name in line_splited[1].split(", "):
+                # adding a person friend to the list by checking the second half of the line
+                friend_person = dict_loader(friend_name.rstrip())
+                # adding the value friend
+                person.add_friend(friend_person)
+            # adding a person to the person_list[]
+            person_list.append(person)
+        # returning person_list[]
+        return person_list
+    # returns and error if file cannot be found or opened
+    except IOError:
+        print("File could not be open !, please check if file named a2_sample_set.txt exist or close file !")
 
 
 if __name__ == '__main__':
+    # calling the load people method
     load_people()
