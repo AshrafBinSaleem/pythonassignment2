@@ -23,7 +23,45 @@
 #   template file and add your own program comments instead. This template file
 #   has omitted program comments, which are your responsibility to add. Any
 #   other 'placeholder' comments should be removed from your final submission.
+
+"""
+-------------------
+Student Information
+-------------------
+"""
+
+"""
+Name: Ashraf Bin Saleem
+Student ID: 31039960
+
+Start Date:  28/5/2020
+Last Edit Date: 8/6/2020
+"""
+
+"""
+---------------------
+Overview Of Program
+---------------------
+"""
+
+"""
+This file contains code for the task 1.
+
+Task 1 objective is to create a program that creates and stores a list of people with their social connections with
+fellow members on the list. The program achieves this by reading a text file that was provided with its own specified
+reading method. Upon reading the file, the program will store each person and their friends within a dictionary that
+contains the objects of each person created. 
+"""
+
+"""
+-----------------------
+Beginning Of Code
+-----------------------
+"""
+
 # creating a dictionary to store unique person name and store their person object.
+# person_dict -> map the name with Person object
+# { str : Person }
 # key = person_name (str) & value =  Person_object
 person_dict = {}
 
@@ -55,7 +93,7 @@ class Person:
         return self.friends_list
 
 
-# creating a dictionary to store name and person object as friend
+# Return Person object if exist in dictionary if not create new dictionary entry and return it.
 # name: str -> string read from text file
 def dict_loader(name):
     # validating if dictionary key exist or not, if not create new Person
@@ -80,12 +118,13 @@ def load_people():
         # looping through each line in the text file
         for line in read_file:
             # splitting each line into half's
-            line_splited = line.split(": ")
+            line_splitted = line.split(": ")
+
             # assigning the dictionary value based on the input of the first half of the line (aka the person name).
-            person = dict_loader(line_splited[0])
+            person = dict_loader(line_splitted[0])
 
             # adding friends
-            for friend_name in line_splited[1].split(", "):
+            for friend_name in line_splitted[1].split(", "):
                 # adding a person friend to the list by checking the second half of the line
                 friend_person = dict_loader(friend_name.rstrip())
                 # adding the value friend
