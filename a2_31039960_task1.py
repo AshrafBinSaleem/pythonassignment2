@@ -23,6 +23,27 @@ contains the objects of each person created.
 """
 
 """
+----------------------
+References
+______________________
+(1) 
+URL: https://www.w3schools.com/python/ref_string_rstrip.asp
+Date of retrieval: 3/06/2020
+
+(2)
+URL: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html
+Date of retrieval: 4/06/2020
+
+(3)
+URL: https://queirozf.com/entries/pandas-dataframe-plot-examples-with-matplotlib-pyplot
+Date of retrieval: 4/06/2020
+
+(4)
+URL: https://realpython.com/documenting-python-code/#basics-of-commenting-code
+Date of retrieval: 8/6/2020
+"""
+
+"""
 -----------------------
 Code
 -----------------------
@@ -37,74 +58,99 @@ person_dict = {}
 
 class Person:
     """
-    Constructor
-    first_name: str -> the first name of the person
-    last_name: str -> the last name of the person
+    Person class
     """
     def __init__(self, first_name, last_name):
-
+        """
+        Constructor
+        first_name: str -> the first name of the person
+        last_name: str -> the last name of the person
+        """
         self.first_name = first_name
         self.last_name = last_name
         self.friends_list = []
 
-    """
-    Method that add friends to the objects friend_list[]
-    friend_person: Person -> person object
-    """
     def add_friend(self, friend_person):
-        self.friends_list.append(friend_person)  # adding Person object to friends_list[]
+        """
+        Method that add friends to the objects friend_list[]
+        friend_person: Person -> person object
+        """
 
-    """
-    Method to return person name
-    :return: will return first_name + last_name
-    """
+        # adding Person object to friends_list[]
+        self.friends_list.append(friend_person)
+
     def get_name(self):
+        """
+        Method to return person name
+        :return: will return first_name + last_name
+        """
+
         return self.first_name + " " + self.last_name
 
-    """
-    Method to return person friend_list[]
-    :return: return will return friend_list[]
-    """
     def get_friends(self):
+        """
+        Method to return person friend_list[]
+        :return: return will return friend_list[]
+        """
         return self.friends_list
 
-
-"""
-Method to return Person object if exist in dictionary if not create new dictionary entry and return it.
-:param name: takes in name of person to check against dictionary key
-:return: person_dict[name]
-"""
 def dict_loader(name):
-    if name not in person_dict:  # validating if dictionary key exist or not, if not create new Person
-        person_first_name = name.split(" ")[0]  # assigning first part of string eg : "Gill"
-        person_last_name = name.split(" ")[1]  # assigning second part of string eg : "Bates"
-        person_dict[name] = Person(person_first_name, person_last_name)  # creating dictionary input with string name as key and Person as value
-    return person_dict[name]  # returning the dictionary key/value
+    """
+    Method to return Person object if exist in dictionary if not create new dictionary entry and return it.
+    :param name: takes in name of person to check against dictionary key
+    :return: person_dict[name]
+    """
+
+    # validating if dictionary key exist or not, if not create new Person
+    if name not in person_dict:
+        # assigning first part of string eg : "Gill"
+        person_first_name = name.split(" ")[0]
+        # assigning second part of string eg : "Bates"
+        person_last_name = name.split(" ")[1]
+        # creating dictionary input with string name as key and Person as value
+        person_dict[name] = Person(person_first_name, person_last_name)
+    # returning the dictionary key/value
+    return person_dict[name]
 
 
-"""
-Method to load (initialize) people
-:return: person_list
-"""
+
 def load_people():
+    """
+    Method to load (initialize) people
+    :return: person_list
+    """
+
     # Validating if file can be opened
     try:
-        read_file = open("a2_sample_set.txt", "r")  # reading text file
-        person_list = []  # creating a list to store person objects
-        for line in read_file:  # looping through each line in the text file
-            line_splitted = line.split(": ")  # splitting each line into half's
-            person = dict_loader(line_splitted[0])  # assigning the dictionary value based on the input of the first half of the line (aka the person name).
-            for friend_name in line_splitted[1].split(", "):  # adding friends
-                friend_person = dict_loader(friend_name.rstrip())  # adding a person friend to the list by checking the second half of the line
-                person.add_friend(friend_person)  # adding the value friend
-            person_list.append(person)  # adding a person to the person_list[]
-        return person_list  # returning person_list[]
-    except IOError:  # returns and error if file cannot be found or opened
+        # reading text file
+        read_file = open("a2_sample_set.txt", "r")
+        # creating a list to store person objects
+        person_list = []
+        # looping through each line in the text file
+        for line in read_file:
+            # splitting each line into half's
+            line_splitted = line.split(": ")
+            # assigning the dictionary value based on the input of the first half of the line (aka the person name).
+            person = dict_loader(line_splitted[0])
+            # adding friends
+            for friend_name in line_splitted[1].split(", "):
+                # adding a person friend to the list by checking the second half of the line
+                friend_person = dict_loader(friend_name.rstrip())
+                # adding the value friend
+                person.add_friend(friend_person)
+            # adding a person to the person_list[]
+            person_list.append(person)
+        # returning person_list[]
+        return person_list
+    # returns and error if file cannot be found or opened
+    except IOError:
         print("File could not be open !, please check if file named a2_sample_set.txt exist or close file !")
 
 
-"""
-Main method to run all functions required for program to work.
-"""
 if __name__ == '__main__':
-    load_people()  # calling the load people method
+    """
+    Main method to run all functions required for program to work.
+    """
+
+    # calling the load people method
+    load_people()
